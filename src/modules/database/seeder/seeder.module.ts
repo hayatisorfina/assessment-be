@@ -8,16 +8,21 @@ import { Brand } from 'src/modules/brands/entities/brand.entity';
 import { ProductColorVariant } from 'src/modules/products/entities/product-color-variant.entity';
 import { Order } from 'src/modules/orders/entities/order.entity';
 import { OrderItems } from 'src/modules/orders/entities/order-items.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'ep-damp-union-aobmg34s-pooler.c-2.ap-southeast-1.aws.neon.tech',
-      port: 5432,
-      username: 'neondb_owner',
-      password: 'npg_LVkCSx4eJX2O',
-      database: 'neondb',
+      host: process.env.POSTGRES_HOST,
+      port: parseInt(process.env.POSTGRES_PORT),
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB,
       entities: [Category, Brand, Product, ProductColor, ProductColorVariant, Order, OrderItems],
       synchronize: true,
       ssl: { rejectUnauthorized: false },
